@@ -30,7 +30,7 @@ export default function Home() {
       {/* Hero Section */}
       <section className="flex-1 flex flex-col items-center justify-center text-center px-4 py-20 bg-gradient-to-b from-indigo-50 to-white">
         <div className="max-w-4xl mx-auto space-y-8">
-          <div className="relative w-24 h-24 mx-auto mb-8">
+          <div className="relative w-32 h-32 mx-auto mb-8">
             <Image
               src="/logo.png"
               alt="BioCloud Logo"
