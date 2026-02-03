@@ -46,13 +46,21 @@ export default function Dashboard() {
                 return
             }
 
+            // JOIN on project_views to get count
             const { data } = await supabase
                 .from('projects')
-                .select('*')
+                .select('*, project_views(count)')
                 .eq('owner_id', user.id)
                 .order('created_at', { ascending: false })
 
-            if (data) setProjects(data)
+            if (data) {
+                // Flatten the count for easier access
+                const projectsWithCounts = data.map(p => ({
+                    ...p,
+                    view_count: p.project_views?.[0]?.count || 0
+                }))
+                setProjects(projectsWithCounts)
+            }
             setLoading(false)
         }
 
@@ -99,6 +107,7 @@ export default function Dashboard() {
                             <tr>
                                 <th scope="col" className="px-6 py-4 text-left text-xs font-semibold text-gray-400 tracking-wider">File Name</th>
                                 <th scope="col" className="px-6 py-4 text-left text-xs font-semibold text-gray-400 tracking-wider">Format</th>
+                                <th scope="col" className="px-6 py-4 text-left text-xs font-semibold text-gray-400 tracking-wider">Views</th>
                                 <th scope="col" className="px-6 py-4 text-left text-xs font-semibold text-gray-400 tracking-wider">Uploaded</th>
                                 <th scope="col" className="px-6 py-4 text-left text-xs font-semibold text-gray-400 tracking-wider">Status</th>
                                 <th scope="col" className="relative px-6 py-4">
@@ -125,6 +134,12 @@ export default function Dashboard() {
                                         <span className="px-2.5 py-1 inline-flex text-xs font-medium rounded-full bg-gray-100 text-gray-600 border border-gray-200">
                                             {project.file_extension.toUpperCase()}
                                         </span>
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        <div className="flex items-center gap-1.5">
+                                            <Eye className="w-4 h-4 text-gray-400" />
+                                            <span>{project.view_count || 0}</span>
+                                        </div>
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                         {new Date(project.created_at).toLocaleDateString('en-US', {
