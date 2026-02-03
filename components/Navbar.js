@@ -1,10 +1,13 @@
 'use client'
 import { useState, useEffect } from 'react'
 import { supabase } from '@/utils/supabase'
+import Image from 'next/image'
 import Link from 'next/link'
-import { LogOut, User, Dna } from 'lucide-react'
+import { LogOut, User } from 'lucide-react'
 
 export default function Navbar() {
+    // ...
+    // (keeping state logic same, just updating render)
     const [user, setUser] = useState(null)
 
     useEffect(() => {
@@ -32,9 +35,15 @@ export default function Navbar() {
 
     return (
         <nav className="sticky top-0 z-50 flex items-center justify-between px-6 py-4 bg-white/80 backdrop-blur-md border-b border-gray-200/60 sticky-nav">
-            <Link href="/" className="flex items-center gap-2 font-semibold text-xl text-gray-900 tracking-tight">
-                <div className="p-1.5 bg-blue-500 rounded-lg text-white">
-                    <Dna className="w-5 h-5" />
+            <Link href="/" className="flex items-center gap-3 font-semibold text-xl text-gray-900 tracking-tight">
+                <div className="relative w-8 h-8">
+                    <Image
+                        src="/logo.png"
+                        alt="BioCloud Logo"
+                        fill
+                        className="object-contain"
+                        priority
+                    />
                 </div>
                 <span className="bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">BioCloud</span>
             </Link>

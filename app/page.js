@@ -2,6 +2,7 @@
 import { useEffect } from 'react'
 import { supabase } from '@/utils/supabase'
 import { useRouter } from 'next/navigation'
+import Image from 'next/image'
 import { ArrowRight, Box, Layers, Share2 } from 'lucide-react'
 
 export default function Home() {
@@ -29,6 +30,16 @@ export default function Home() {
       {/* Hero Section */}
       <section className="flex-1 flex flex-col items-center justify-center text-center px-4 py-20 bg-gradient-to-b from-indigo-50 to-white">
         <div className="max-w-4xl mx-auto space-y-8">
+          <div className="relative w-24 h-24 mx-auto mb-8">
+            <Image
+              src="/logo.png"
+              alt="BioCloud Logo"
+              fill
+              className="object-contain"
+              priority
+            />
+          </div>
+
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-100 text-indigo-700 text-sm font-medium">
             <span className="relative flex h-2 w-2">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
