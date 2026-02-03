@@ -108,7 +108,11 @@ export default function Dashboard() {
                         </thead>
                         <tbody className="divide-y divide-gray-50">
                             {projects.map((project) => (
-                                <tr key={project.id} className="group hover:bg-gray-50/50 transition-colors">
+                                <tr
+                                    key={project.id}
+                                    onClick={() => router.push(`/view/${project.id}`)}
+                                    className="group hover:bg-gray-50/50 transition-colors cursor-pointer"
+                                >
                                     <td className="px-6 py-4 whitespace-nowrap">
                                         <div className="flex items-center">
                                             <div className="p-2 bg-blue-50 text-blue-600 rounded-lg mr-3">
@@ -131,22 +135,22 @@ export default function Dashboard() {
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap">
                                         <span className={`px-2.5 py-1 inline-flex text-xs font-medium rounded-full border ${project.is_public
-                                                ? 'bg-green-50 text-green-700 border-green-200'
-                                                : 'bg-yellow-50 text-yellow-700 border-yellow-200'
+                                            ? 'bg-green-50 text-green-700 border-green-200'
+                                            : 'bg-yellow-50 text-yellow-700 border-yellow-200'
                                             }`}>
                                             {project.is_public ? 'Public' : 'Private'}
                                         </span>
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                         <div className="flex items-center justify-end gap-3 opacity-0 group-hover:opacity-100 transition-opacity">
-                                            <Link
-                                                href={`/view/${project.id}`}
-                                                className="text-blue-600 hover:text-blue-700 border border-blue-200 bg-blue-50 px-3 py-1.5 rounded-full text-xs font-medium transition-all hover:shadow-sm"
-                                            >
-                                                View
-                                            </Link>
+                                            <div className="text-blue-600 hover:text-blue-700 border border-blue-200 bg-blue-50 px-3 py-1.5 rounded-full text-xs font-medium transition-all hover:shadow-sm">
+                                                Open
+                                            </div>
                                             <button
-                                                onClick={() => handleDelete(project.id, project.file_url, project.owner_id)}
+                                                onClick={(e) => {
+                                                    e.stopPropagation()
+                                                    handleDelete(project.id, project.file_url, project.owner_id)
+                                                }}
                                                 className="text-gray-400 hover:text-red-600 transition-colors p-1.5 hover:bg-red-50 rounded-full"
                                             >
                                                 <Trash2 className="h-4 w-4" />

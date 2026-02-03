@@ -79,33 +79,22 @@ export default function ViewPage() {
             <div className="w-[400px] flex flex-col border-l border-gray-200 bg-white">
 
                 {/* Header Metadata */}
-                <div className="p-6 border-b border-gray-200 space-y-4">
+                <div className="p-8 border-b border-gray-50 space-y-6">
                     <div>
-                        <div className="flex items-center justify-between mb-2">
-                            <span className="px-2 py-0.5 rounded text-xs font-mono font-bold bg-gray-100 text-gray-700 uppercase">
-                                {project.file_extension}
+                        <div className="flex items-center justify-between mb-4">
+                            <span className="px-3 py-1 rounded-full text-xs font-medium bg-blue-50 text-blue-700 border border-blue-100">
+                                {project.file_extension.toUpperCase()}
                             </span>
                             <div className="flex gap-2">
-                                <button onClick={copyLink} className="p-1.5 text-gray-400 hover:text-indigo-600 hover:bg-indigo-50 rounded transition-colors" title="Share">
+                                <button onClick={copyLink} className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-full transition-colors" title="Share">
                                     <Share2 className="w-4 h-4" />
                                 </button>
-                                <a href={project.file_url} download className="p-1.5 text-gray-400 hover:text-indigo-600 hover:bg-indigo-50 rounded transition-colors" title="Download">
+                                <a href={project.file_url} download className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-full transition-colors" title="Download">
                                     <Download className="w-4 h-4" />
                                 </a>
                             </div>
                         </div>
-                        <h1 className="text-xl font-bold text-gray-900 break-words">{project.title}</h1>
-                    </div>
-
-                    <div className="space-y-2 text-sm text-gray-500 font-mono">
-                        <div className="flex items-center gap-2">
-                            <Database className="w-3 h-3" />
-                            <span className="truncate max-w-[300px]">{project.id}</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                            <Clock className="w-3 h-3" />
-                            <span>{new Date(project.created_at).toUTCString()}</span>
-                        </div>
+                        <h1 className="text-3xl font-bold text-gray-900 break-words tracking-tight leading-tight">{project.title}</h1>
                     </div>
                 </div>
 
