@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react'
 import { supabase } from '@/utils/supabase'
 import { useParams, useRouter } from 'next/navigation'
 
+import MoleculeViewer from '@/components/MoleculeViewer'
 import InteractionPanel from '@/components/InteractionPanel'
 import { ArrowLeft, Download, Share2, Loader2, Database, Clock } from 'lucide-react'
 import Link from 'next/link'
