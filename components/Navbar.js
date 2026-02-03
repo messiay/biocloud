@@ -46,7 +46,9 @@ export default function Navbar() {
                             Dashboard
                         </Link>
                         <div className="flex items-center gap-3 pl-4 border-l border-gray-200">
-                            <span className="text-sm text-gray-500 hidden sm:block font-medium">{user.email}</span>
+                            <Link href="/profile" className="text-sm text-gray-500 hidden sm:block font-medium hover:text-blue-600 transition-colors">
+                                {user.email}
+                            </Link>
                             <button
                                 onClick={handleLogout}
                                 className="p-2 text-gray-400 hover:text-red-500 transition-colors hover:bg-gray-100 rounded-full"
