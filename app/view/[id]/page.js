@@ -1,15 +1,15 @@
 'use client'
-import { useEffect, useState, use } from 'react'
+import { useEffect, useState } from 'react'
 import { supabase } from '@/utils/supabase'
-import { useParams } from 'next/navigation'
+import { useParams, useRouter } from 'next/navigation'
 import MoleculeViewer from '@/components/MoleculeViewer'
 import NotesSidebar from '@/components/NotesSidebar'
-import { Share2, ArrowLeft, Download, Loader2 } from 'lucide-react'
+import { ArrowLeft, Download, Share2, Loader2, Database, Clock } from 'lucide-react'
 import Link from 'next/link'
 
-export default function ViewPage({ params }) {
-    // Unwrapping params for Next.js 15+ (if applicable, but useParams is safer client-side)
+export default function ViewPage() {
     const { id } = useParams()
+    const router = useRouter()
     const [project, setProject] = useState(null)
     const [user, setUser] = useState(null)
     const [loading, setLoading] = useState(true)
@@ -21,7 +21,7 @@ export default function ViewPage({ params }) {
 
             if (!id) return;
 
-            const { data, error } = await supabase
+            const { data } = await supabase
                 .from('projects')
                 .select('*')
                 .eq('id', id)
@@ -35,78 +35,82 @@ export default function ViewPage({ params }) {
 
     if (loading) {
         return (
-            <div className="flex items-center justify-center h-[calc(100vh-100px)]">
-                <Loader2 className="w-8 h-8 animate-spin text-indigo-600" />
+            <div className="flex items-center justify-center h-screen bg-white">
+                <Loader2 className="w-8 h-8 animate-spin text-gray-400" />
             </div>
         )
     }
 
-    if (!project) {
-        return (
-            <div className="text-center py-20">
-                <h2 className="text-2xl font-bold text-gray-800">Project Not Found</h2>
-                <Link href="/dashboard" className="text-indigo-600 hover:underline mt-4 inline-block">
-                    Back to Dashboard
-                </Link>
-            </div>
-        )
-    }
+    if (!project) return null
 
     const isOwner = user?.id === project.owner_id
 
     const copyLink = () => {
         navigator.clipboard.writeText(window.location.href)
-        alert('Link copied to clipboard!')
+        alert('Link copied to clipboard')
     }
 
     return (
-        <div className="h-[calc(100vh-100px)] flex flex-col">
-            {/* Header */}
-            <header className="flex items-center justify-between mb-4 px-1">
-                <div className="flex items-center gap-4">
-                    <Link href="/dashboard" className="p-2 hover:bg-gray-100 rounded-lg transition-colors text-gray-500">
-                        <ArrowLeft className="w-5 h-5" />
+        <div className="flex h-[calc(100vh-64px)] overflow-hidden bg-white">
+            {/* Left Panel: 3D Stage */}
+            <div className="flex-1 relative bg-gray-100 flex flex-col">
+                <div className="absolute top-4 left-4 z-10">
+                    <Link
+                        href="/dashboard"
+                        className="flex items-center gap-2 px-3 py-2 bg-white border border-gray-200 rounded shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
+                    >
+                        <ArrowLeft className="w-4 h-4" />
+                        Back to Repository
                     </Link>
-                    <h1 className="text-2xl font-bold text-gray-900">{project.title}</h1>
-                    <span className="px-2 py-1 text-xs font-bold uppercase bg-indigo-100 text-indigo-700 rounded border border-indigo-200">
-                        {project.file_extension}
-                    </span>
                 </div>
 
-                <div className="flex items-center gap-2">
-                    <a
-                        href={project.file_url}
-                        download
-                        className="p-2 text-gray-500 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-all"
-                        title="Download Original File"
-                    >
-                        <Download className="w-5 h-5" />
-                    </a>
-                    <button
-                        onClick={copyLink}
-                        className="flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
-                    >
-                        <Share2 className="w-4 h-4" />
-                        Share
-                    </button>
-                </div>
-            </header>
-
-            {/* Main Content */}
-            <div className="flex-1 flex flex-col lg:flex-row gap-6 min-h-0">
-
-                {/* Viewer Area */}
-                <div className="flex-1 bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden flex flex-col">
-                    <div className="flex-1 relative">
+                <div className="flex-1 w-full h-full">
+                    {/* The containerRef in MoleculeViewer handles dimensions automatically */}
+                    <div className="w-full h-full relative">
                         <MoleculeViewer
                             url={project.file_url}
                             type={project.file_extension}
                         />
                     </div>
                 </div>
+            </div>
 
-                {/* Sidebar */}
-                <div className="lg:w-96 h-full bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden flex flex-col">
+            {/* Right Panel: Sidebar Information */}
+            <div className="w-[400px] flex flex-col border-l border-gray-200 bg-white">
+
+                {/* Header Metadata */}
+                <div className="p-6 border-b border-gray-200 space-y-4">
+                    <div>
+                        <div className="flex items-center justify-between mb-2">
+                            <span className="px-2 py-0.5 rounded text-xs font-mono font-bold bg-gray-100 text-gray-700 uppercase">
+                                {project.file_extension}
+                            </span>
+                            <div className="flex gap-2">
+                                <button onClick={copyLink} className="p-1.5 text-gray-400 hover:text-indigo-600 hover:bg-indigo-50 rounded transition-colors" title="Share">
+                                    <Share2 className="w-4 h-4" />
+                                </button>
+                                <a href={project.file_url} download className="p-1.5 text-gray-400 hover:text-indigo-600 hover:bg-indigo-50 rounded transition-colors" title="Download">
+                                    <Download className="w-4 h-4" />
+                                </a>
+                            </div>
+                        </div>
+                        <h1 className="text-xl font-bold text-gray-900 break-words">{project.title}</h1>
+                    </div>
+
+                    <div className="space-y-2 text-sm text-gray-500 font-mono">
+                        <div className="flex items-center gap-2">
+                            <Database className="w-3 h-3" />
+                            <span className="truncate max-w-[300px]">{project.id}</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                            <Clock className="w-3 h-3" />
+                            <span>{new Date(project.created_at).toUTCString()}</span>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Notes Component (Fills remaining height) */}
+                <div className="flex-1 overflow-hidden">
                     <NotesSidebar
                         projectId={project.id}
                         initialNotes={project.notes}

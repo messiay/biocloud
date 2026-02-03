@@ -17,7 +17,6 @@ export default function NotesSidebar({ projectId, initialNotes, isOwner }) {
                 .eq('id', projectId)
 
             if (error) throw error
-            // Optional: Toast notification
         } catch (error) {
             alert('Failed to save notes')
         } finally {
@@ -26,45 +25,40 @@ export default function NotesSidebar({ projectId, initialNotes, isOwner }) {
     }
 
     return (
-        <div className="w-full lg:w-80 flex flex-col h-full bg-white border-l border-gray-200">
-            <div className="p-4 border-b border-gray-100 flex items-center justify-between bg-gray-50">
-                <h2 className="font-semibold text-gray-800 flex items-center gap-2">
-                    Project Notes
+        <div className="flex flex-col h-full bg-white">
+            <div className="px-8 py-4 border-b border-gray-50 flex items-center justify-between bg-white">
+                <h2 className="text-sm font-semibold text-gray-900">
+                    Notes
                 </h2>
                 {!isOwner && (
-                    <span className="text-xs flex items-center gap-1 text-gray-500 bg-gray-200 px-2 py-1 rounded-full">
+                    <span className="text-xs flex items-center gap-1 text-gray-400 bg-gray-50 px-2 py-1 rounded-full">
                         <Lock className="w-3 h-3" /> Read Only
                     </span>
                 )}
             </div>
 
-            <div className="flex-1 p-4">
+            <div className="flex-1 p-0">
                 {isOwner ? (
                     <textarea
                         value={notes}
                         onChange={(e) => setNotes(e.target.value)}
-                        className="w-full h-full p-3 text-sm text-gray-700 bg-white border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-none transition-all placeholder:text-gray-300"
-                        placeholder="Write your research notes here..."
+                        className="w-full h-full p-8 text-base text-gray-700 bg-white border-0 focus:ring-0 resize-none placeholder:text-gray-300 leading-relaxed"
+                        placeholder="Add your research notes..."
                     />
                 ) : (
-                    <div className="w-full h-full p-4 text-sm text-gray-600 bg-gray-50 rounded-lg overflow-auto prose prose-sm">
-                        {notes || <em className="text-gray-400">No notes available.</em>}
+                    <div className="w-full h-full p-8 text-base text-gray-700 bg-white overflow-auto leading-relaxed">
+                        {notes || <span className="text-gray-300">No notes recorded.</span>}
                     </div>
                 )}
             </div>
 
             {isOwner && (
-                <div className="p-4 border-t border-gray-100 bg-gray-50">
+                <div className="p-6 border-t border-gray-50 bg-white">
                     <button
                         onClick={handleSave}
                         disabled={saving}
-                        className="w-full flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 disabled:opacity-50 transition-colors"
+                        className="w-full flex items-center justify-center gap-2 px-6 py-3 text-sm font-medium text-white bg-gray-900 rounded-xl hover:bg-black disabled:opacity-50 transition-all shadow-sm active:scale-[0.98]"
                     >
-                        {saving ? (
-                            <span className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin" />
-                        ) : (
-                            <Save className="w-4 h-4" />
-                        )}
                         {saving ? 'Saving...' : 'Save Notes'}
                     </button>
                 </div>

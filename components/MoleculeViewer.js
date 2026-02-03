@@ -68,24 +68,21 @@ export default function MoleculeViewer({ url, type }) {
     }, [url, type])
 
     return (
-        <div className="relative w-full h-[600px] bg-gray-50 rounded-xl border border-gray-200 overflow-hidden shadow-sm">
+        <div className="relative w-full h-full bg-gray-100 overflow-hidden">
             {loading && (
-                <div className="absolute inset-0 flex items-center justify-center bg-white/80 z-10">
+                <div className="absolute inset-0 flex items-center justify-center bg-gray-100/90 z-10">
                     <div className="flex flex-col items-center gap-2">
-                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-                        <p className="text-sm text-gray-500">Loading structure...</p>
+                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
+                        <p className="text-xs font-mono text-gray-500 uppercase tracking-widest">Rendering...</p>
                     </div>
                 </div>
             )}
 
             {error && (
                 <div className="absolute inset-0 flex items-center justify-center bg-white z-20">
-                    <div className="text-center p-6 max-w-md">
-                        <h3 className="text-red-600 font-bold mb-2">Error Loading Molecule</h3>
-                        <p className="text-gray-600 mb-4">{error}</p>
-                        <div className="mt-4 text-sm text-gray-500 bg-gray-100 p-2 rounded">
-                            Tip: Ensure your Supabase Storage bucket &quot;molecules&quot; is set to <strong>Public</strong>.
-                        </div>
+                    <div className="text-center p-6 max-w-md border border-red-200 bg-red-50 rounded">
+                        <h3 className="text-red-800 font-bold mb-2 font-mono uppercase text-xs">Error</h3>
+                        <p className="text-red-600 text-sm mb-4">{error}</p>
                     </div>
                 </div>
             )}
