@@ -14,6 +14,8 @@ export default function ViewPage() {
     const [user, setUser] = useState(null)
     const [loading, setLoading] = useState(true)
 
+    const [ownerProfile, setOwnerProfile] = useState(null)
+
     useEffect(() => {
         async function getData() {
             const { data: { user } } = await supabase.auth.getUser()
@@ -21,13 +23,28 @@ export default function ViewPage() {
 
             if (!id) return;
 
+            // 1. Log View
+            supabase.from('project_views').insert({ project_id: id }).then(({ error }) => {
+                if (error) console.error('Error logging view:', error)
+            })
+
             const { data } = await supabase
                 .from('projects')
                 .select('*')
                 .eq('id', id)
                 .single()
 
-            if (data) setProject(data)
+            if (data) {
+                setProject(data)
+                // 2. Fetch Owner Profile
+                const { data: profile } = await supabase
+                    .from('profiles')
+                    .select('*')
+                    .eq('id', data.owner_id)
+                    .single()
+
+                if (profile) setOwnerProfile(profile)
+            }
             setLoading(false)
         }
         getData()
@@ -95,6 +112,16 @@ export default function ViewPage() {
                             </div>
                         </div>
                         <h1 className="text-3xl font-bold text-gray-900 break-words tracking-tight leading-tight">{project.title}</h1>
+
+                        {/* Shared By Badge */}
+                        {ownerProfile && (
+                            <div className="mt-4 flex items-center gap-2 text-sm text-gray-500">
+                                <div className="w-6 h-6 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-xs text-white font-bold">
+                                    {ownerProfile.email?.[0].toUpperCase() || 'U'}
+                                </div>
+                                <span>Shared by <span className="text-gray-900 font-medium">{ownerProfile.email}</span></span>
+                            </div>
+                        )}
                     </div>
                 </div>
 
