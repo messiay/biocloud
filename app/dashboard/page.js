@@ -149,10 +149,7 @@ export default function Dashboard() {
                                             day: 'numeric'
                                         })}
                                     </td>
-                                    import PrivacyToggle from '@/components/PrivacyToggle'
-                                    // ... (imports)
 
-                                    // ... (inside map)
                                     <td className="px-6 py-4 whitespace-nowrap">
                                         <div onClick={(e) => e.stopPropagation()}>
                                             <PrivacyToggle
