@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 import { supabase } from '@/utils/supabase'
 import { useParams, useRouter } from 'next/navigation'
 import MoleculeViewer from '@/components/MoleculeViewer'
-import NotesSidebar from '@/components/NotesSidebar'
+import InteractionPanel from '@/components/InteractionPanel'
 import { ArrowLeft, Download, Share2, Loader2, Database, Clock } from 'lucide-react'
 import Link from 'next/link'
 
@@ -125,12 +125,13 @@ export default function ViewPage() {
                     </div>
                 </div>
 
-                {/* Notes Component (Fills remaining height) */}
+                {/* Header Metadata */}
                 <div className="flex-1 overflow-hidden">
-                    <NotesSidebar
+                    <InteractionPanel
                         projectId={project.id}
                         initialNotes={project.notes}
                         isOwner={isOwner}
+                        user={user}
                     />
                 </div>
             </div>

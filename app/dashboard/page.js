@@ -4,6 +4,7 @@ import { supabase } from '@/utils/supabase'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import UploadZone from '@/components/UploadZone'
+import PrivacyToggle from '@/components/PrivacyToggle'
 import { FileText, Loader2, Trash2, Eye, MoreHorizontal } from 'lucide-react'
 
 export default function Dashboard() {
@@ -148,13 +149,17 @@ export default function Dashboard() {
                                             day: 'numeric'
                                         })}
                                     </td>
+                                    import PrivacyToggle from '@/components/PrivacyToggle'
+                                    // ... (imports)
+
+                                    // ... (inside map)
                                     <td className="px-6 py-4 whitespace-nowrap">
-                                        <span className={`px-2.5 py-1 inline-flex text-xs font-medium rounded-full border ${project.is_public
-                                            ? 'bg-green-50 text-green-700 border-green-200'
-                                            : 'bg-yellow-50 text-yellow-700 border-yellow-200'
-                                            }`}>
-                                            {project.is_public ? 'Public' : 'Private'}
-                                        </span>
+                                        <div onClick={(e) => e.stopPropagation()}>
+                                            <PrivacyToggle
+                                                projectId={project.id}
+                                                initialStatus={project.is_public}
+                                            />
+                                        </div>
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                         <div className="flex items-center justify-end gap-3 opacity-0 group-hover:opacity-100 transition-opacity">
