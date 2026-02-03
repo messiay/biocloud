@@ -1,0 +1,23 @@
+import './globals.css'
+import Navbar from '@/components/Navbar'
+import { Inter } from 'next/font/google'
+
+const inter = Inter({ subsets: ['latin'] })
+
+export const metadata = {
+  title: 'BioCloud - Universal Biological File Platform',
+  description: 'Visualize, Store, and Share Biological Data effortlessly.',
+}
+
+export default function RootLayout({ children }) {
+  return (
+    <html lang="en">
+      <body className={`${inter.className} bg-slate-50 min-h-screen text-slate-900`}>
+        <Navbar />
+        <main>
+          {children}
+        </main>
+      </body>
+    </html>
+  )
+}
