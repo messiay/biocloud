@@ -22,13 +22,20 @@ export default function UploadZone() {
     const processFile = async (file) => {
         if (!file) return
 
+        // Security: Check File Size (Max 50MB)
+        const MAX_SIZE = 50 * 1024 * 1024; // 50MB
+        if (file.size > MAX_SIZE) {
+            alert('File is too large! Maximum limit is 50MB.');
+            return;
+        }
+
         setUploading(true)
         try {
             const user = (await supabase.auth.getUser()).data.user
             if (!user) throw new Error('You must be logged in to upload.')
 
-            const fileExt = file.name.split('.').pop()
-            const fileName = `${Date.now()}_${file.name}`
+            const fileExt = file.name.split('.').pop().toLowerCase()
+            const fileName = `${Date.now()}_${file.name.replace(/[^a-zA-Z0-9.-]/g, '_')}`
             const filePath = `${user.id}/${fileName}`
 
             // 1. Upload to Storage

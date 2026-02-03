@@ -4,12 +4,43 @@ import { supabase } from '@/utils/supabase'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import UploadZone from '@/components/UploadZone'
-import { FileText, Clock, ExternalLink, Loader2 } from 'lucide-react'
+import { FileText, Clock, ExternalLink, Loader2, Trash2 } from 'lucide-react'
 
 export default function Dashboard() {
     const [projects, setProjects] = useState([])
     const [loading, setLoading] = useState(true)
     const router = useRouter()
+
+    const handleDelete = async (projectId, fileUrl, ownerId) => {
+        if (!confirm('Are you sure you want to delete this project?')) return
+
+        try {
+            // 1. Delete from Storage
+            // Extract path from URL: .../molecules/USER_ID/FILENAME
+            const path = fileUrl.split('/molecules/')[1]
+            if (path) {
+                const { error: storageError } = await supabase.storage
+                    .from('molecules')
+                    .remove([path])
+
+                if (storageError) console.error('Storage delete error:', storageError)
+            }
+
+            // 2. Delete from DB
+            const { error: dbError } = await supabase
+                .from('projects')
+                .delete()
+                .eq('id', projectId)
+
+            if (dbError) throw dbError
+
+            // 3. Update UI
+            setProjects(prev => prev.filter(p => p.id !== projectId))
+
+        } catch (error) {
+            alert('Error deleting project: ' + error.message)
+        }
+    }
 
     useEffect(() => {
         const fetchProjects = async () => {
@@ -91,9 +122,21 @@ export default function Dashboard() {
                                         <Clock className="w-3 h-3" />
                                         {new Date(project.created_at).toLocaleDateString()}
                                     </div>
-                                    <div className="flex items-center gap-1 text-indigo-600 font-medium opacity-0 group-hover:opacity-100 transition-opacity">
-                                        View
-                                        <ExternalLink className="w-3 h-3" />
+                                    <div className="flex items-center gap-3">
+                                        <button
+                                            onClick={(e) => {
+                                                e.preventDefault();
+                                                handleDelete(project.id, project.file_url, project.owner_id)
+                                            }}
+                                            className="p-1 hover:text-red-500 hover:bg-red-50 rounded transition-colors"
+                                            title="Delete Project"
+                                        >
+                                            <Trash2 className="w-4 h-4" />
+                                        </button>
+                                        <div className="flex items-center gap-1 text-indigo-600 font-medium opacity-0 group-hover:opacity-100 transition-opacity">
+                                            View
+                                            <ExternalLink className="w-3 h-3" />
+                                        </div>
                                     </div>
                                 </div>
                             </div>
